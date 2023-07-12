@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row>
-            <el-col :span="8">
+            <el-col :span="8" style="padding-right: 10px;">
                 <el-card class="box-card">
                     <div class="use">
                         <img src="../img/wallhaven-j3yp6y.jpg" alt="" srcset="">
@@ -23,14 +23,13 @@
                         <el-table-column
                             :prop="item.prop"
                             :label="item.label"
-                            :width="item.width"
                             v-for="item in tableLable"
                             :key="item.prop">
                         </el-table-column>
                     </el-table>
                 </el-card>
             </el-col>
-            <el-col :span="16">
+            <el-col :span="16" style="padding-left: 10px;">
                 <div class="num">
                     <el-card v-for="item in countData" :key="item.value" :body-style="{display:'flex',padding:'0px'}">
                         <i :class="`el-icon-${item.icon}`" class="iicon" :style="{ background : item.color}"></i>
@@ -40,6 +39,17 @@
                         </div>
                     </el-card>
                 </div>
+                <el-card style="height: 280px;">
+                    <div ref="echarts1" style="height: 280px ;width: 100%;"></div>
+                </el-card>
+                <div class="graph">
+                    <el-card style="height: 260px;">
+                        <div ref="echarts2" style="height: 260px;"></div>
+                    </el-card>
+                    <el-card style="height: 260px;">
+                        <div ref="echarts3" style="height: 260px;"></div>
+                    </el-card>
+                </div>
             </el-col>
         </el-row>
     </div>
@@ -47,44 +57,53 @@
 
 <script>
 import { getData } from '../api'
+import * as echarts from 'echarts'
 export default {
     data() {
         return {
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市'
-            }, 
-            {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市'
-            }, 
-            {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市'
-            }, 
-            {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市'
-            }],
+            mainData:{},
+            tableData: [
+                // {
+                //     date: '2016-05-02',
+                //     name: '王小虎',
+                //     address: '上海市',
+                //     monthBuy:1
+                // }, 
+                // {
+                //     date: '2016-05-04',
+                //     name: '王小虎',
+                //     address: '上海市'
+                // }, 
+                // {
+                //     date: '2016-05-01',
+                //     name: '王小虎',
+                //     address: '上海市'
+                // }, 
+                // {
+                //     date: '2016-05-03',
+                //     name: '王小虎',
+                //     address: '上海市'
+                // }
+            ],
             tableLable:[
                 {
-                    prop:"date",
-                    label:"日期",
-                    width:"180"
-                },
-                {
                     prop:"name",
-                    label:"姓名",
-                    width:"180",
+                    label:"品牌",
+                    
                 },
                 {
-                    prop:"address",
-                    label:"地址",
-                    width:"80",
+                    prop:"todayBuy",
+                    label:"今日购买",
+                  
+                },
+                {
+                    prop:"monthBuy",
+                    label:"本月购买",
+                    
+                },
+                {
+                    prop:"totalBuy",
+                    label:"总购买",
                 },
             ],
             countData:[
@@ -124,13 +143,126 @@ export default {
                     icon:'success',
                     color:'#2ec7c9'
                 },
-            ]
+            ],
+            echarts1Data:{
+                
+            }
         }
     },
     mounted(){
-        getData().then((data)=>{
+        getData().then(({data})=>{
+            const { tableData } = data.data
+            this.tableData = tableData
+            this.mainData=data
             console.log(data);
+            //基于准备好的dom，初始化echarts
+            const echarts1 = echarts.init(this.$refs.echarts1)
+            //指定的图标配置项
+            let option1= {}
+            //数据的处理
+            const { orderData,useData,viedoData } = data.data
+           
+            const xAxis = Object.keys(orderData.data[0])
+            option1.xAxis = {
+                data:xAxis
+            }
+            option1.yAxis={
+            
+            }
+            option1.legend={
+                data:xAxis
+            }
+            option1.series =[]
+            xAxis.forEach(item=>{
+                option1.series.push({
+                    name:item,
+                    data: orderData.data.map(ke=>ke[item]),
+                    type:'line'
+                })
+            })
+            //配置显示图表
+            echarts1.setOption(option1)
+            //柱状图
+            const echarts2 =  echarts.init(this.$refs.echarts2)
+            //柱状图数据
+            const option2 = {
+                legend:{
+                    textStyle:{
+                        color:'#333'
+                    }
+                },
+                grid:{
+                    left:'20%'
+                },
+                tooltip:{
+                    trigger:'axis'
+                },
+                xAxis:{
+                    type:'category',
+                    data:useData.map(item=>item.data),
+                    axisLine:{
+                        lineStyle:{
+                            color:'#17b3a3'
+                        }
+                    },
+                    axisLable:{
+                        interval:0,
+                        color:'#333'
+                    },
+
+                },
+                yAxis:[
+                    {
+                        type:'value',
+                        axisLine:{
+                            lineStyle:{
+                                color:'#333'
+                            }
+                        }
+                    }
+                ],
+                color:["#2ec7c9","#b6a2de"],
+                series:[
+                    {
+                        name:'新增用户',
+                        data:useData.map(item=>item.new),
+                        type:'bar'
+                    },
+                    {
+                        name:'活跃用户',
+                        data:useData.map(item=>item.active),
+                        type:'bar'
+                    }
+                ]
+            }
+            echarts2.setOption(option2)
+            //饼状图
+            const echarts3 = echarts.init(this.$refs.echarts3)
+            //饼状图数据
+            
+            const option3={
+                tooltip:{
+                    trigger:'item'
+                },
+                color:[
+                    "#0f78f4",
+                    "#dd536b",
+                    "#9462e5",
+                    "#a6a6a6",
+                    "#e1bb22",
+                    "#39c362",
+                    "#3ed1cf"
+                ],
+                series:[
+                    {
+                        data:viedoData,
+                        type:'pie'
+                    }
+                ],
+            }
+            echarts3.setOption(option3)
         })
+
     }
 }
 
@@ -205,6 +337,14 @@ export default {
             width: 32%;
             margin-bottom: 20px;
 
+        }
+    }
+    .graph{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        .el-card{
+            width: 48%;
         }
     }
 </style>

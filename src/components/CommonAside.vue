@@ -27,7 +27,7 @@
     min-height: 400px;
 }
 .el-menu{
-    height: 100vh;
+    height: 120vh;
     border: 0px;
     h3{
         text-align: center;

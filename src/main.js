@@ -4,6 +4,7 @@ import ElementUI from 'element-ui'
 import router from './router';
 import store from './store'
 import './api/mock'
+
 //按需引入
 //import { Row,Button } from 'element-ui'; 
 import 'element-ui/lib/theme-chalk/index.css';

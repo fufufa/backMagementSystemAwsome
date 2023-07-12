@@ -7,7 +7,7 @@ const http = axios.create({
 })
 
 
-//添加拦截器
+//添加拦截器 
 http.interceptors.request.use(function(config){
     //发送请求前做些什么
     return config
