@@ -19,14 +19,14 @@ Vue.use(VueRouter)
 const routes=[
     {
         path:'/',
-        component:Main,
+        component: Main,
         redirect:'/home',//重定向
         children:[
-            {path:'/Home',component: Home},
-            {path:'/User',component: User},
-            {path:'/Mall',component:Mall},
-            {path:'/PageOne',component:PageOne},
-            {path:'/PageTwo',component:PageTwo},
+            {path:'/home',name:'home',component: Home},
+            {path:'/user',name:'user',component: User},
+            {path:'/mall',name:'mall',component:Mall},
+            {path:'/pageOne',name:'pageone',component:PageOne},
+            {path:'/pageTwo',name:'PageTwo',component:PageTwo},
         ]
     }
 ]

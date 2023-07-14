@@ -89,7 +89,6 @@ export default {
                 {
                     prop:"name",
                     label:"品牌",
-                    
                 },
                 {
                     prop:"todayBuy",

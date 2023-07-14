@@ -46,7 +46,7 @@ export default {
             menuData: [
                 {
                     path: '/',
-                    name: 'main',
+                    name: 'home',
                     lable: '首页',
                     icon: 's-home',
                     url: 'Home/home'
@@ -98,8 +98,9 @@ export default {
         clickMenu(item){
             if(this.$route.path != item.path && !(this.$route.path==='/home' && item.path=== '/')){
                 this.$router.push(item.path)
+                this.$store.commit("updateTableList",item)
             }
-
+            
         },
         clickMenuChildren(item){
             if(this.$route.path!=item.path && !(this.$route.path == '/home' && item.path === '/')){
