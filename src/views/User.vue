@@ -15,8 +15,8 @@
             </el-form-item>
             <el-form-item label="性别" prop="sex">
                 <el-select v-model="form.sex" placeholder="请选择你的性别">
-                    <el-option label="男" value="1"></el-option>
-                    <el-option label="女" value="0"></el-option>
+                    <el-option label="男" value="男"></el-option>
+                    <el-option label="女" value="女"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="出生日期" prop="birth">
@@ -42,8 +42,9 @@
             </el-button>
         </div>
         <el-table
-        :data="tableData"
+        :data="mountedData"
         style="width: 100%"
+        height="81%"
         stripe>
             <el-table-column
                 :prop="item.name"
@@ -60,6 +61,13 @@
                     </template>
             </el-table-column>
         </el-table>
+        <div>
+            <el-pagination
+                layout="prev, pager, next"
+                :total="total"
+                @current-change="handlePage">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -209,7 +217,9 @@ export default{
                     label:'地址'
                 },
             ],
-            modalType:0
+            modalType:0,
+            pageH:0,
+            mountedData:[]
         }
     },
     methods:{
@@ -259,9 +269,42 @@ export default{
         },
         deleteMsg(scope){
             this.tableData.splice(scope.$index,1)
+            this.handlePage(Math.floor(scope.$index/9)+1)
+            console.log(Math.floor(scope.$index/9)+1);
+            console.log(this.tableData,this.tableDataSepart);
+        },
+        handlePage(val){
+            console.log(val);
+            this.mountedData=this.tableDataSepart[val-1]
         }
     },
+    computed:{
+        total(){
+            return this.tableData.length
+        },
+        tableDataSepart(){
+            let arr = new Array()
+            for(let i=0;i<=this.tableData.length/9;i++){
+                arr[i]=new Array()
+                for(let j=0;j<9;j++){
+                    if(typeof(this.tableData[i*9+j]) == "undefined") break
+                    arr[i][j]=this.tableData[i*9+j]
+                }
+            }
+            return arr
+        }
+    },
+    mounted(){
+        this.mountedData=this.tableDataSepart[0]
+    }
    
 }
 
 </script>
+
+<style lang="less" scoped>
+    .manage{
+        height: 90%;
+    }
+    
+</style>
