@@ -8,6 +8,8 @@ import Mall from "../views/Mall.vue"
 import PageOne from "../views/PageOne.vue"
 import PageTwo from "../views/PageTwo.vue"
 
+import Login from '../views/Login.vue'
+
 
 
 Vue.use(VueRouter)
@@ -20,14 +22,20 @@ const routes=[
     {
         path:'/',
         component: Main,
+        name:'Main',
         redirect:'/home',//重定向
         children:[
-            {path:'/home',name:'home',component: Home},
-            {path:'/user',name:'user',component: User},
-            {path:'/mall',name:'mall',component:Mall},
-            {path:'/pageOne',name:'pageone',component:PageOne},
-            {path:'/pageTwo',name:'PageTwo',component:PageTwo},
+            // {path:'/home',name:'home',component: Home},
+            // {path:'/user',name:'user',component: User},
+            // {path:'/mall',name:'mall',component:Mall},
+            // {path:'/pageOne',name:'pageone',component:PageOne},
+            // {path:'/pageTwo',name:'PageTwo',component:PageTwo},
         ]
+    },
+    {
+        path:'/login',
+        name:'login',
+        component:Login
     }
 ]
 

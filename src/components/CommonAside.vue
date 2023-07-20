@@ -40,6 +40,8 @@
 </style>
 
 <script>
+import Cookies from 'js-cookie'
+
 export default {
     data() {
         return {
@@ -119,6 +121,13 @@ export default {
         },
         isCollapse(){
             return this.$store.state.tab.isCollapse
+        }
+    },
+    mounted(){
+        if(Cookies.get('menu')){
+            this.menuData=JSON.parse(Cookies.get('menu'))
+        }else{
+            this.menuData=this.$store.state.asideMenu.MenuData
         }
     }
 

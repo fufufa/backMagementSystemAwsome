@@ -8,13 +8,13 @@
             </el-breadcrumb>
         </div>
         <div class="rContent">
-            <el-dropdown>
+            <el-dropdown @command="layout">
                 <span class="el-dropdown-link">
                     下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>个人中心</el-dropdown-item>
-                    <el-dropdown-item>退出</el-dropdown-item>
+                    <el-dropdown-item command="logout">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -23,6 +23,8 @@
 
 <script>
 import { mapState } from 'vuex';
+import jsCookie from 'js-cookie';
+
 export default {
     data() {
         return {}
@@ -30,6 +32,17 @@ export default {
     methods:{
         handleMunu(){
             this.$store.commit('collapseMenu')
+        },
+        layout(command){
+            if(command==='logout'){
+                //清除token
+                jsCookie.remove('token')
+                //清除缓存menu
+                jsCookie.remove('menu')
+                this.$router.push('/login')
+            }
+            //清除token信息
+            
         }
     },
     computed:{
